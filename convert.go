@@ -2,7 +2,6 @@ package baseconvert
 
 import (
 	"errors"
-	"math"
 	"strings"
 )
 
@@ -24,40 +23,43 @@ func NewBaseNCodec(alphabet string) (*BaseNCodec, error) {
 	}, nil
 }
 
-// Encode 将一个整数编码为指定 base 的字符串
 func (bc *BaseNCodec) Encode(number uint64) (string, error) {
-	if number < 0 {
-		return "", errors.New("number must be non-negative")
-	}
-
 	if number == 0 {
 		return string(bc.Alphabet[0]), nil
 	}
 
-	var result []byte
+	var result strings.Builder
 	for number > 0 {
-		result = append(result, bc.Alphabet[number%bc.Base])
+		result.WriteByte(bc.Alphabet[number%bc.Base])
 		number /= bc.Base
 	}
 
-	// 翻转结果，因为我们从最低位开始追加字符
-	for i, j := 0, len(result)-1; i < j; i, j = i+1, j-1 {
-		result[i], result[j] = result[j], result[i]
+	encoded := result.String()
+
+	// 翻转字符串，因为结果是从低位到高位的
+	runes := []rune(encoded)
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+		runes[i], runes[j] = runes[j], runes[i]
 	}
 
-	return string(result), nil
+	return string(runes), nil
 }
 
 // Decode 将一个 base 字符串解码为整数
-func (bc *BaseNCodec) Decode(encoded string) (int, error) {
-	var result int
-	for i, char := range encoded {
-		index := strings.IndexRune(bc.Alphabet, char)
-		if index == -1 {
+func (bc *BaseNCodec) Decode(encoded string) (uint64, error) {
+	mapAlphabetIdx := make(map[rune]int)
+	for i, alphabet := range bc.Alphabet {
+		mapAlphabetIdx[alphabet] = i
+	}
+
+	var result uint64
+	for _, char := range encoded {
+		index, exists := mapAlphabetIdx[char]
+		if !exists {
 			return 0, errors.New("invalid character in encoded string")
 		}
-		power := len(encoded) - i - 1
-		result += index * int(math.Pow(float64(bc.Base), float64(power)))
+		result = result*bc.Base + uint64(index)
 	}
+
 	return result, nil
 }
