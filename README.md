@@ -15,12 +15,8 @@ import (
 
 func main() {
 	// Base62 的字符表
-	base62Alphabet := "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	base62Codec, err := baseconvert.NewBaseNCodec(base62Alphabet)
-	if err != nil {
-		log.Fatal(err)
-	}
-
+	base62Codec := baseconvert.NewBase62Codec()
+	
 	// 编码示例
 	number := uint64(12345)
 	encoded, err := base62Codec.Encode(number)
@@ -37,11 +33,7 @@ func main() {
 	fmt.Printf("Decoded %s to base10: %d\n", encoded, decoded)
 
 	// Base52 的字符表
-	base52Alphabet := "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	base52Codec, err := baseconvert.NewBaseNCodec(base52Alphabet)
-	if err != nil {
-		log.Fatal(err)
-	}
+	base52Codec := baseconvert.NewBase52Codec()
 
 	// 编码示例
 	encodedBase52, err := base52Codec.Encode(number)

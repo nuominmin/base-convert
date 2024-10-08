@@ -23,6 +23,16 @@ func NewBaseNCodec(alphabet string) (*BaseNCodec, error) {
 	}, nil
 }
 
+func NewBase62Codec() *BaseNCodec {
+	baseNCodec, _ := NewBaseNCodec("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+	return baseNCodec
+}
+
+func NewBase52Codec() *BaseNCodec {
+	baseNCodec, _ := NewBaseNCodec("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
+	return baseNCodec
+}
+
 func (bc *BaseNCodec) Encode(number uint64) (string, error) {
 	if number == 0 {
 		return string(bc.Alphabet[0]), nil
