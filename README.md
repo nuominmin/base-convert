@@ -22,7 +22,7 @@ func main() {
 	}
 
 	// 编码示例
-	number := 12345
+	number := uint64(12345)
 	encoded, err := base62Codec.Encode(number)
 	if err != nil {
 		log.Fatal(err)

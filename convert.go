@@ -9,12 +9,12 @@ import (
 // BaseNCodec 结构体
 type BaseNCodec struct {
 	Alphabet string // 编码表，如 BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
-	Base     int    // 编码的进制数，如 BASE = 62
+	Base     uint64 // 编码的进制数，如 BASE = 62
 }
 
 // NewBaseNCodec 创建一个 BaseNCodec 实例
 func NewBaseNCodec(alphabet string) (*BaseNCodec, error) {
-	base := len(alphabet)
+	base := uint64(len(alphabet))
 	if base < 2 {
 		return nil, errors.New("alphabet length must be at least 2")
 	}
@@ -25,7 +25,7 @@ func NewBaseNCodec(alphabet string) (*BaseNCodec, error) {
 }
 
 // Encode 将一个整数编码为指定 base 的字符串
-func (bc *BaseNCodec) Encode(number int) (string, error) {
+func (bc *BaseNCodec) Encode(number uint64) (string, error) {
 	if number < 0 {
 		return "", errors.New("number must be non-negative")
 	}
